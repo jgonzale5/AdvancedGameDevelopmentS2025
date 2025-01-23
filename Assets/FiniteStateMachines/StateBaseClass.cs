@@ -1,9 +1,12 @@
 using UnityEngine;
+//
+using System.Collections.Generic;
 
-public abstract class StateBaseClass
+public abstract class StateBaseClass 
 {
     //A reference to the enemyscript that controls this class
     public FSM_EnemyScript enemyScript;
+
 
     //Whenever a state of this type is created we need to give it a reference to an enemy script
     public StateBaseClass(FSM_EnemyScript enemyScript)

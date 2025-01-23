@@ -1,4 +1,6 @@
 using UnityEngine;
+//
+using System.Collections.Generic;
 
 [System.Serializable]
 public class FSM_PatrolState : StateBaseClass
@@ -9,6 +11,8 @@ public class FSM_PatrolState : StateBaseClass
     public float destinationTolerance = 1f;
     //The destination of this enemy
     public Vector3 targetPos;
+
+
 
     public FSM_PatrolState(FSM_EnemyScript enemyScript) : base(enemyScript) { }
 
@@ -31,11 +35,13 @@ public class FSM_PatrolState : StateBaseClass
         //We refresh the target position so it matches the one calculated by the navmesh
         targetPos = enemyScript.navMeshAgent.pathEndPosition;
         //
-        Debug.Log("Moving to " + targetPos.ToString());
+        //Debug.Log("Moving to " + targetPos.ToString());
     }
 
     public override void OnEveryFrame()
     {
+        
+
 
         //If the distance between the enemy and its destination is less than the maximum accepted or the path cannot be reached
         if (Vector3.Distance(enemyScript.transform.position, targetPos) <= destinationTolerance 
@@ -43,6 +49,12 @@ public class FSM_PatrolState : StateBaseClass
         {
             //Change back to the idle state
             ChangeState(enemyScript.idleState, ref enemyScript.currentState);
+        }
+
+
+        if (enemyScript.CheckIfPlayerVisible())
+        {
+            ChangeState(enemyScript.chaseState, ref enemyScript.currentState);
         }
     }
 
@@ -53,6 +65,6 @@ public class FSM_PatrolState : StateBaseClass
 
     public override void OnExitState()
     {
-        Debug.Log("Leaving patrol state");
+        //Debug.Log("Leaving patrol state");
     }
 }
