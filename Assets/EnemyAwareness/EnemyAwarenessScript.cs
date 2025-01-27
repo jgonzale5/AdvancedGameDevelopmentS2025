@@ -31,7 +31,7 @@ public class EnemyAwarenessScript : MonoBehaviour, IAwareness
     //Adds the collider to the list
     public void AddToAwarenessList(Collider collider)
     {
-        Debug.Log(collider.name + " entered awareness of this object.");
+        //Debug.Log(collider.name + " entered awareness of this object.");
         collidersInAwareness.Add(collider);
         //After the item has been added to the list, we tell all subscribers of this event that it has entered awareness of this object
         //We add the ? to indicate that we will only invoke this event if it's not null

@@ -24,12 +24,16 @@ public class FSM_EnemyScript : MonoBehaviour
     public LayerMask visionLayers;
     //
     public GameObject eyes;
+    [Header("Hearing")]
+    //
+    public EnemyHearingScript hearingScript;
 
     [Header("States")]
     public StateBaseClass currentState;
     public StateBaseClass idleState;
     public StateBaseClass patrolState;
     public StateBaseClass chaseState;
+    public StateBaseClass investigateState;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -42,6 +46,7 @@ public class FSM_EnemyScript : MonoBehaviour
         idleState = new FSM_IdleState(this);
         patrolState = new FSM_PatrolState(this);
         chaseState = new FSM_ChaseState(this);
+        investigateState = new FSM_InvestigateState(this);
 
         //Entry state gets assigned
         currentState = idleState;
@@ -54,14 +59,14 @@ public class FSM_EnemyScript : MonoBehaviour
         if (awarenessSphere == null)
             awarenessSphere = GetComponentInChildren<EnemyAwarenessScript>();
 
-        awarenessSphere.OnColliderEntersAwareness += TargetIfPlayer;
-        //awarenessSphere.OnColliderExitsAwareness += (x => Debug.Log("Player exited awareness"));
+        awarenessSphere.OnColliderEntersAwareness += TargetIfPlayer; 
+        hearingScript.OnSoundHeard += InvestigateSound; 
     }
 
     private void OnDisable()
     {
-        awarenessSphere.OnColliderEntersAwareness -= TargetIfPlayer;
-        //awarenessSphere.OnColliderExitsAwareness -= (x => Debug.Log("Player exited awareness"));
+        awarenessSphere.OnColliderEntersAwareness -= TargetIfPlayer; 
+        hearingScript.OnSoundHeard -= InvestigateSound; 
     }
 
     // Update is called once per frame
@@ -77,6 +82,10 @@ public class FSM_EnemyScript : MonoBehaviour
         currentState.OnEveryPhysicsFrame();
     }
 
+    /// <summary>
+    /// Checks if the object that entered is the player and displays a message if that's the case
+    /// </summary>
+    /// <param name="col"></param>
     public void TargetIfPlayer(Collider col)
     {
         if (col.gameObject.CompareTag(playerTag))
@@ -85,7 +94,10 @@ public class FSM_EnemyScript : MonoBehaviour
         }
     }
 
-    //
+    /// <summary>
+    /// Checks if the player is visible
+    /// </summary>
+    /// <returns>Whether the player is in range, in the FOV, and not blocked by a wall</returns>
     public bool CheckIfPlayerVisible()
     {
         Collider player;
@@ -106,12 +118,16 @@ public class FSM_EnemyScript : MonoBehaviour
         }
 
         target = player.gameObject;
-        Debug.Log("Player detected!");
+        //Debug.Log("Player detected!");
 
         return true;
     }
 
-    //
+    /// <summary>
+    /// Returns whether the rangle between obj and this object is less than the cone of vision angle.
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns>Returns ture if obj is within the field of view of this enemy.</returns>
     public bool IsObjectInRange(Transform obj)
     {
         //Get us the angle between the direct line of vision of the eyes and the player in respect to the eyes
@@ -122,7 +138,11 @@ public class FSM_EnemyScript : MonoBehaviour
         return objAngle < coneOfVisionAngle;
     }
 
-    //
+    /// <summary>
+    /// Checks whether there's something blocking the view of obj from the enemy.
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns>Returns true if this object has uninterrupted view of obj</returns>
     public bool IsObjectVisible(Transform obj)
     {
         Ray ray = new Ray(eyes.transform.position, obj.position - eyes.transform.position);
@@ -135,5 +155,18 @@ public class FSM_EnemyScript : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction, Color.blue);
         return false;
+    }
+
+    /// <summary>
+    /// When called, will change the enemy to the investigate state and have them check the position of the sound played
+    /// </summary>
+    /// <param name="sound">The sound played that will be investigated</param>
+    public void InvestigateSound(SoundClass sound)
+    {
+        if (currentState is FSM_ChaseState)
+            return;
+
+        ((FSM_InvestigateState)investigateState).SetTargetPos(sound.position);
+        currentState.ChangeState(investigateState, ref currentState);
     }
 }

@@ -22,8 +22,8 @@ public class PointAndWalkScript : MonoBehaviour
 
     void Update()
     {
-        //When the player clicks
-        if (Input.GetMouseButtonDown(0))
+        //When the player right-clicks
+        if (Input.GetMouseButtonDown(1))
         {
             //We cast a ray from the camera in the direction that they clicked
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
