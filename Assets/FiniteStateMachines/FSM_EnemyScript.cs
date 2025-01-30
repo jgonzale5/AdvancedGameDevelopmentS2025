@@ -10,30 +10,38 @@ public class FSM_EnemyScript : MonoBehaviour
     public NavMeshAgent navMeshAgent;
 
     [Header("Awareness")]
-    //
+    //The script that becomes aware of surrounding entities
     public EnemyAwarenessScript awarenessSphere;
-    //
+    //The taf of the player
     public string playerTag;
-    //
+    //The target
     public GameObject target;
 
     [Header("Vision")]
-    //
+    //The degree of visibility of this enemy
     public float coneOfVisionAngle;
-    //
+    //The layers this enemy cannot see through
     public LayerMask visionLayers;
-    //
+    //The eyes of this enemy
     public GameObject eyes;
+
     [Header("Hearing")]
-    //
+    //The script handling the hearing of this enemy
     public EnemyHearingScript hearingScript;
 
+    [Header("Explosions")]
+    //The script handling the awareness of explosion
+    public EnemyExplosionAwareness explosionAwarenessScript;
+
     [Header("States")]
+    //The current state of this enemy
     public StateBaseClass currentState;
+    //The other states that this enemy can have
     public StateBaseClass idleState;
     public StateBaseClass patrolState;
     public StateBaseClass chaseState;
     public StateBaseClass investigateState;
+    public StateBaseClass takeCoverState;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -41,12 +49,11 @@ public class FSM_EnemyScript : MonoBehaviour
         //Get the navmeshagent in this game object
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-
-
         idleState = new FSM_IdleState(this);
         patrolState = new FSM_PatrolState(this);
         chaseState = new FSM_ChaseState(this);
         investigateState = new FSM_InvestigateState(this);
+        takeCoverState = new FSM_TakingCover(this);
 
         //Entry state gets assigned
         currentState = idleState;
@@ -60,13 +67,16 @@ public class FSM_EnemyScript : MonoBehaviour
             awarenessSphere = GetComponentInChildren<EnemyAwarenessScript>();
 
         awarenessSphere.OnColliderEntersAwareness += TargetIfPlayer; 
-        hearingScript.OnSoundHeard += InvestigateSound; 
+        hearingScript.OnSoundHeard += InvestigateSound;
+        //When the explosion awareness picks up on a sound, this enemy takes cover
+        explosionAwarenessScript.OnSoundHeard += TakeCover;
     }
 
     private void OnDisable()
     {
         awarenessSphere.OnColliderEntersAwareness -= TargetIfPlayer; 
-        hearingScript.OnSoundHeard -= InvestigateSound; 
+        hearingScript.OnSoundHeard -= InvestigateSound;
+        explosionAwarenessScript.OnSoundHeard -= TakeCover;
     }
 
     // Update is called once per frame
@@ -168,5 +178,19 @@ public class FSM_EnemyScript : MonoBehaviour
 
         ((FSM_InvestigateState)investigateState).SetTargetPos(sound.position);
         currentState.ChangeState(investigateState, ref currentState);
+    }
+
+    public void TakeCover(SoundClass sound)
+    {
+        if (sound is not WarningSoundClass)
+        {
+            Debug.Log("Ignoring sound because it's not a warning sound");
+            return;
+        }
+
+        WarningSoundClass warningSound = (WarningSoundClass)sound;
+
+        ((FSM_TakingCover)takeCoverState).SetExplosion(warningSound.explosionSource);
+        currentState.ChangeState(takeCoverState, ref currentState);
     }
 }

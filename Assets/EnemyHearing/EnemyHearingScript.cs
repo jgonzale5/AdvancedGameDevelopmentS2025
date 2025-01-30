@@ -4,12 +4,15 @@ using UnityEngine.Events;
 
 public class EnemyHearingScript : MonoBehaviour
 {
-    //
+    //Whether this enemy can hear through walls
     public bool canHearThroughWalls = true;
-    //
+    //The event called when the sound is head
     public UnityAction<SoundClass> OnSoundHeard;
 
-    //
+    /// <summary>
+    /// Checks whether this enemy heard that sound
+    /// </summary>
+    /// <param name="sound"></param>
     public void CheckIfHeard(SoundClass sound)
     {
         Debug.Log("I heard something");

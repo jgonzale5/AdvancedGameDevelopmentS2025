@@ -8,17 +8,17 @@ public class SpeakerOnClickScript : MonoBehaviour
     public AudioSource source;
     
     //A variable to keep track of the sound that was last played
-    private SoundClass newSound;
+    protected SoundClass newSound;
 
     //If there's no source assigned, get the one from this object
-    private void Awake()
+    protected void Awake()
     {
         if (sound == null)
             source = GetComponent<AudioSource>();
     }
 
     //A function that plays the sound on this object
-    public void PlaySound()
+    public virtual void PlaySound()
     {
         //Assign a new value to newSound
         newSound = new SoundClass(source, sound.clip, sound.range, this.transform.position);
@@ -27,13 +27,13 @@ public class SpeakerOnClickScript : MonoBehaviour
     }
 
     //When this object is clicked on
-    private void OnMouseDown()
+    protected void OnMouseDown()
     {
         PlaySound();
     }
 
     //
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         if (newSound == null)
             return;

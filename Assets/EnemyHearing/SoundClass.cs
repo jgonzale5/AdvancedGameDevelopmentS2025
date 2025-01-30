@@ -35,7 +35,7 @@ public class SoundClass
     /// <summary>
     /// Gets all the EnemyHearingScript instances in range and notifies them that this sound has been played.
     /// </summary>
-    private void RangeNotify()
+    protected virtual void RangeNotify()
     {
         Collider[] listeners = Physics.OverlapSphere(this.position, this.range);
 
