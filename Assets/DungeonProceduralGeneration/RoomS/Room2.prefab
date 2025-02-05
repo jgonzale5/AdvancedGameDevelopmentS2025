@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7766724713917112926}
   - component: {fileID: 3792924174485532782}
   m_Layer: 0
-  m_Name: Room1
+  m_Name: Room2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,16 +50,15 @@ MonoBehaviour:
     alignmentObject: {fileID: 280658341370989194}
     keywords:
     - red
-  - name: BlueExit
-    alignmentObject: {fileID: 39552614142605598}
-    keywords:
-    - blue
-  - name: PurpleExit
+  - name: YellowExit1
     alignmentObject: {fileID: 2653544460365817718}
     keywords:
-    - blue
+    - yellow
+  - name: RedExit2
+    alignmentObject: {fileID: 39552614142605598}
+    keywords:
     - red
-  - name: YellowExit
+  - name: YellowExit2
     alignmentObject: {fileID: 3246101825362670121}
     keywords:
     - yellow
@@ -135,7 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2653544460365817718}
   m_Layer: 0
-  m_Name: PurpleAlignment
+  m_Name: YellowAlignment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,7 +165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 39552614142605598}
   m_Layer: 0
-  m_Name: BlueAlignment
+  m_Name: RedAlignment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,6 +234,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
+      propertyPath: 'm_Materials.Array.data[5]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cbef9c2b14a571e4e8ff84d2eceb946b, type: 2}
+    - target: {fileID: -7511558181221131132, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
+      propertyPath: 'm_Materials.Array.data[6]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4f003468082e6af43b95f5c5af93edf6, type: 2}
     - target: {fileID: 919132149155446097, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
       propertyPath: m_Name
       value: dungeon_room
@@ -257,15 +264,15 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8412704797868494788}
+      addedObject: {fileID: 3539129173197484338}
   m_SourcePrefab: {fileID: 100100000, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
 --- !u!1 &3714466072315687304 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
   m_PrefabInstance: {fileID: 4561309589329464537}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &8412704797868494788
-BoxCollider:
+--- !u!64 &3539129173197484338
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -282,9 +289,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.020000005, y: 0.020000009, z: 0.020000005}
-  m_Center: {x: 0, y: 1.4210856e-16, z: 0.010000003}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5551418225153903260, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
 --- !u!4 &4091449458530560818 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
