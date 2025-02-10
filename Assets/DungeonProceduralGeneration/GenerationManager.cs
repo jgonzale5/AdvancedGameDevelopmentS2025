@@ -4,19 +4,43 @@ using UnityEngine;
 
 public class GenerationManager : MonoBehaviour
 {
+    //
+    public int seed = 0;    
+
     /// <summary>
-    /// 
+    /// The amount of rooms that this dungeon is made of, including the spawn room
     /// </summary>
     public int roomAmount = 6;
     /// <summary>
-    /// 
+    /// The rooms that this generator can chose from when making the dungeon
     /// </summary>
     public RoomScript[] rooms;
 
+    [Header("Closing exits")]
+    /// <summary>
+    /// The walls that this generator can chose from when closing off the exits of the dungeon
+    /// </summary>
+    public WallScript[] walls;
+    /// <summary>
+    /// How close the position of the alignment of two exits must be to consider them connected
+    /// </summary>
+    public float exitProximityTolerance = 0.1f;
+
+    /// <summary>
+    /// Dictionary used to keep track of exits spawned, specifically for when creating and connecting rooms
+    /// </summary>
     public Dictionary<string, Deck<RoomScript.ExitClass>> availableExits = new Dictionary<string, Deck<RoomScript.ExitClass>>();
+    /// <summary>
+    /// List of exits so we can close them off at the end
+    /// </summary>
+    [SerializeField]
+    private List<RoomScript.ExitClass> openExits = new List<RoomScript.ExitClass>();
+
 
     private void Start()
     {
+        Random.InitState(this.seed);
+
         //We chose a random number between 0 and rooms.Length - 1
         int randRoom = Random.Range(0, rooms.Length);
 
@@ -28,7 +52,15 @@ public class GenerationManager : MonoBehaviour
             randRoom = Random.Range(0, rooms.Length);
             SpawnRoom(rooms[randRoom]);
         }
+
+        //
+        ConnectExits();
+
+        //Close off all exits left open
+        CloseOffExits();
     }
+
+    #region RoomSpawning
 
     /// <summary>
     /// Spawns the specified room at the first available exit
@@ -64,7 +96,7 @@ public class GenerationManager : MonoBehaviour
                     //For each exit available with that keyword
                     foreach (var otherExit in exitsWithKeyword)
                     {
-                        Debug.Log("Trying to connect " + otherExit.name + " and " + exit.name);
+                        //Debug.Log("Trying to connect " + otherExit.name + " and " + exit.name);
                         //We try to connect the room
                         //If it fails, we move to the next exit within that keyword
                         if (!newRoom.TryConnect(exit, otherExit))
@@ -87,7 +119,7 @@ public class GenerationManager : MonoBehaviour
         
         
     }
-    
+
     /// <summary>
     /// Registers all exits in new room
     /// </summary>
@@ -109,6 +141,9 @@ public class GenerationManager : MonoBehaviour
                 //We register the exit
                 RegisterExit(newExit, keyword);
             }
+
+            //We add the new exit to the list of exits that needs to be closed off by the end
+            openExits.Add(newExit);
         }
     }
 
@@ -152,6 +187,77 @@ public class GenerationManager : MonoBehaviour
             {
                 //Remove the exit from the list
                 value.Remove(exit);
+            }
+        }
+
+        //Remove the open exit from the list
+        openExits.Remove(exit);
+    }
+
+    #endregion
+
+    
+    private void ConnectExits()
+    {
+        for (int i = openExits.Count - 1; i >= 0; i--)
+        {
+            for (int other = 0; other < i; other++)
+            {
+                if (!openExits[i].CanConnect(openExits[other]))
+                    continue;
+
+                if (Vector3.Distance(
+                    openExits[i].alignmentObject.position,
+                    openExits[other].alignmentObject.position) <= exitProximityTolerance)
+                {
+                    openExits.RemoveAt(i);
+                    openExits.RemoveAt(other);
+                    i--;
+                    break;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Spawns random walls and attempts to connect them with all of the available exits
+    /// </summary>
+    private void CloseOffExits()
+    {
+        int wallsToSpawn = openExits.Count;
+        Debug.Log("Spawning " + wallsToSpawn + " walls");
+
+        //For each exit available, we need to make a wall
+        for (int n = 0; n < wallsToSpawn; n++)
+        {
+            //We make the new wall
+            WallScript newWall = Instantiate(walls[Random.Range(0, walls.Length)]);
+            //We initialize the connection succeeded variable
+            bool connectionSucceeded = false;
+
+            //And test it agaisnt every exit
+            for (int i = openExits.Count - 1; i >= 0; i--)
+            {
+                connectionSucceeded = false;
+
+                //If the new wall could be connected successfully to the exit
+                if (newWall.TryConnect(openExits[i]))
+                {
+                    //The wall successfully connected
+                    connectionSucceeded = true;
+
+                    //Remove this exit from the list of open exits
+                    openExits.Remove(openExits[i]);
+
+                    //Break out of this loop
+                    break;
+                }
+            }
+
+            //If no fitting exit was found, we display a message
+            if (!connectionSucceeded)
+            {
+                Debug.Log("Wall " + newWall.name + " failed to find a matching exit.");
             }
         }
     }

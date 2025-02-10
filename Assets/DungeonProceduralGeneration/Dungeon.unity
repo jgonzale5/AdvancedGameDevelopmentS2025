@@ -167,6 +167,9 @@ MonoBehaviour:
   rooms:
   - {fileID: 3792924174485532782, guid: c3c5d94b909f0e14ca2448272da09924, type: 3}
   - {fileID: 3792924174485532782, guid: 685d984346e34af46b64488c12ee1451, type: 3}
+  walls:
+  - {fileID: 416890945544408620, guid: 4d1e098a7430c084b891cb0fe8491ac6, type: 3}
+  openExits: []
 --- !u!1 &591545356
 GameObject:
   m_ObjectHideFlags: 0

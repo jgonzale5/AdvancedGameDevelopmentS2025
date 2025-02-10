@@ -72,6 +72,7 @@ public class RoomScript : MonoBehaviour
 
         //Once the room is placed here, the room checks if it's overlapping with another room
         return CheckOverlap(GetComponentInChildren<Collider>());
+        //return true;
     }
 
     /// <summary>
