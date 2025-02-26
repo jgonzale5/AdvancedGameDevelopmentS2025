@@ -12,9 +12,23 @@ public class GenerationManager : MonoBehaviour
     /// </summary>
     public int roomAmount = 6;
     /// <summary>
+    /// The rooms that the player may be spawned in when they start
+    /// </summary>
+    public RoomScript[] spawnRooms;
+    /// <summary>
     /// The rooms that this generator can chose from when making the dungeon
     /// </summary>
     public RoomScript[] rooms;
+
+    [Header("Dangers")]
+    //
+    public int dangerRoomAmount = 3;
+    /// <summary>
+    /// 
+    /// </summary>
+    public RoomScript[] dangerRooms;
+
+
 
     [Header("Closing exits")]
     /// <summary>
@@ -36,24 +50,79 @@ public class GenerationManager : MonoBehaviour
     [SerializeField]
     private List<RoomScript.ExitClass> openExits = new List<RoomScript.ExitClass>();
 
-
-    private void Start()
+    /// <summary>
+    /// Call this function to generate a new dungeon
+    /// </summary>
+    public void GenerateDungeon()
     {
         Random.InitState(this.seed);
 
-        //We chose a random number between 0 and rooms.Length - 1
-        int randRoom = Random.Range(0, rooms.Length);
+        //The two halves of the deck
+        Deck<RoomScript> roomsToBeSpawned = new Deck<RoomScript>();
+        Deck<RoomScript> secondHalf = new Deck<RoomScript>();
 
-        //We spawn the room
-        SpawnRoom(rooms[randRoom], true);
+        //We chose a random number between 0 and spawnRooms.Length - 1
+        int randRoom = Random.Range(0, spawnRooms.Length);
 
-        for (int i = 1; i < roomAmount; i++)
+        //We spawn the first rooma
+        SpawnRoom(spawnRooms[randRoom], true);
+
+        //We already spawned the spawn room, so we start a 1
+        //Since room amount is the total amount of rooms, we subtract the number of danger rooms to only spawn the amount of normal rooms left
+        for (int n = 1; n < roomAmount - dangerRoomAmount; n++)
         {
+            //We chose a random "normal" room
             randRoom = Random.Range(0, rooms.Length);
-            SpawnRoom(rooms[randRoom]);
+
+            if (n < (roomAmount - dangerRoomAmount) / 2)
+            {
+                //We add it to the first half of the deck of rooms to be spawned
+                roomsToBeSpawned.Add(rooms[randRoom]);
+            }
+            else
+            {
+                //We add it to the second half of the deck of rooms to be spawned
+                secondHalf.Add(rooms[randRoom]);
+            }
         }
 
+
+        for (int i = 0; i < dangerRoomAmount; i++)
+        {
+            //We chose a random danger room
+            randRoom = Random.Range(0, dangerRooms.Length);
+            //We add it to the deck of rooms to be spawned
+            secondHalf.Add(dangerRooms[randRoom]);
+        }
+
+        //We shuffle the deck of rooms to be spawned
+        roomsToBeSpawned.Shuffle();
         //
+        secondHalf.Shuffle();
+
+        //We first spawn the rooms in the first half
+        for (int r = 0; r < roomsToBeSpawned.Count; r++)
+        {
+            //We "draw" a room from the deck and spawn it
+            SpawnRoom(roomsToBeSpawned[r]);
+        }
+
+        //Then spawn the rooms in the second half
+        for (int r2 = 0; r2 < secondHalf.Count; r2++)
+        {
+            SpawnRoom(secondHalf[r2]);
+        }
+
+        /*This is for spawning them as we randomly chose them
+        ////We spawn as many rooms as we're required to
+        //for (int i = 1; i < roomAmount; i++)
+        //{
+        //    //This time we generate the number within the range of the rooms array
+        //    randRoom = Random.Range(0, rooms.Length);
+        //    SpawnRoom(rooms[randRoom]);
+        //}*/
+
+        //Connect the exits
         ConnectExits();
 
         //Close off all exits left open

@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7766724713917112926}
   - component: {fileID: 3792924174485532782}
-  - component: {fileID: 3950345324418328992}
   m_Layer: 0
-  m_Name: Room2
+  m_Name: Danger1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,38 +50,19 @@ MonoBehaviour:
     alignmentObject: {fileID: 280658341370989194}
     keywords:
     - red
-  - name: YellowExit1
-    alignmentObject: {fileID: 2653544460365817718}
-    keywords:
-    - yellow
-  - name: RedExit2
+  - name: BlueExit
     alignmentObject: {fileID: 39552614142605598}
     keywords:
+    - blue
+  - name: PurpleExit
+    alignmentObject: {fileID: 2653544460365817718}
+    keywords:
+    - blue
     - red
-  - name: YellowExit2
+  - name: YellowExit
     alignmentObject: {fileID: 3246101825362670121}
     keywords:
     - yellow
---- !u!114 &3950345324418328992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2424512920297828036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SerializedVersion: 0
-  m_OverrideArea: 0
-  m_Area: 0
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
-  m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
 --- !u!1 &4737471245744073857
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +73,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3246101825362670121}
   m_Layer: 0
-  m_Name: YellowAlignment2
+  m_Name: YellowAlignment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2653544460365817718}
   m_Layer: 0
-  m_Name: YellowAlignment1
+  m_Name: PurpleAlignment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 39552614142605598}
   m_Layer: 0
-  m_Name: RedAlignment
+  m_Name: BlueAlignment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -256,13 +236,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
-      propertyPath: 'm_Materials.Array.data[5]'
+      propertyPath: 'm_Materials.Array.data[8]'
       value: 
-      objectReference: {fileID: 2100000, guid: cbef9c2b14a571e4e8ff84d2eceb946b, type: 2}
-    - target: {fileID: -7511558181221131132, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
-      propertyPath: 'm_Materials.Array.data[6]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 4f003468082e6af43b95f5c5af93edf6, type: 2}
+      objectReference: {fileID: 2100000, guid: 7f9ef1a4619852443bf421c0c96988ef, type: 2}
     - target: {fileID: 919132149155446097, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
       propertyPath: m_Name
       value: dungeon_room
@@ -285,14 +261,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4608937655745819980}
+      addedObject: {fileID: 8412704797868494788}
   m_SourcePrefab: {fileID: 100100000, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
 --- !u!1 &3714466072315687304 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb3a25837c4ff0049a33404442b6ea4a, type: 3}
   m_PrefabInstance: {fileID: 4561309589329464537}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &4608937655745819980
+--- !u!65 &8412704797868494788
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
