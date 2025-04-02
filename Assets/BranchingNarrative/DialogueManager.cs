@@ -12,6 +12,8 @@ public class DialogueManager : MonoBehaviour
 
     //The script that handles the display of information on the dialogue box
     public DialogueBoxManager dialogueBoxManager;
+    //A reference to the script that handles the choice buttons
+    public DialogueChoiceManager dialogueChoiceManager;
 
     void Start()
     {
@@ -34,6 +36,13 @@ public class DialogueManager : MonoBehaviour
             //Cache the line
             string line = activeScene.Continue();
 
+            //If there are tags on this line
+            if (activeScene.currentTags.Count > 0)
+            {
+                //Use the language selected
+                line = DialogueLanguageLoader.Instance.GetLine(activeScene.currentTags[0]);
+            }
+
             //If we have reached a point with a decision
             if (activeScene.currentChoices.Count > 0)
             {
@@ -49,6 +58,9 @@ public class DialogueManager : MonoBehaviour
                     choiceIndex++;
                 }
             }
+
+            //Let the choice manager handle the choices presented
+            dialogueChoiceManager.ChoicesAvailable(activeScene.currentChoices);
 
             //progress
             dialogueBoxManager.DisplayText(line);
