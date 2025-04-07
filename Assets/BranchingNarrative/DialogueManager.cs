@@ -20,11 +20,17 @@ public class DialogueManager : MonoBehaviour
         //We initialize the story with the text
         activeScene = new Story(scene.text);
 
+        if (DialogueLanguageLoader.Instance == null)
+        {
+            FindFirstObjectByType<DialogueLanguageLoader>().Init();
+        }
+
         //We debug what it says 
         //Debug.Log(activeScene.Continue());
 
         //Display the next line in the dialogue box 
-        dialogueBoxManager.DisplayText(activeScene.Continue());
+        //dialogueBoxManager.DisplayText(activeScene.Continue());
+        Next();
     }
 
     //This function progresses the story and updates the dialogue box with the next line
@@ -52,8 +58,17 @@ public class DialogueManager : MonoBehaviour
                 //For each choice
                 foreach (var choice in activeScene.currentChoices)
                 {
+                    string choiceText = activeScene.currentChoices[choiceIndex].text;
+                    
+                    //If the choice is tagged with a line ID
+                    if (choice.tags.Count > 0)
+                    {
+                        //Get the corresponding line and set it to be the choice text
+                        choiceText = DialogueLanguageLoader.Instance.GetLine(choice.tags[0]);
+                    }
+
                     //Add a new line showin what button to press
-                    line += "\n" + (choiceIndex + 1).ToString() + ": " + activeScene.currentChoices[choiceIndex].text;
+                    line += "\n" + (choiceIndex + 1).ToString() + ": " + choiceText;
                     //Increase the index by 1
                     choiceIndex++;
                 }

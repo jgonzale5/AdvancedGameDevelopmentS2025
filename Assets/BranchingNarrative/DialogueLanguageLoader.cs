@@ -15,7 +15,7 @@ public class DialogueLanguageLoader : MonoBehaviour
     //A singleton of this script so we can reference it later
     public static DialogueLanguageLoader Instance;
 
-    private void Start()
+    public void Init()
     {
         //Load the file
         LoadFile();
