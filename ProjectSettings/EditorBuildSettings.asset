@@ -9,8 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+    path: Assets/MultiplayerClass/MultiplayerArenaDemo.unity
+    guid: 3abe7f24e2f57274a9e4406e77a61abb
+  - enabled: 1
     path: Assets/MultiplayerClass/MultiplayerDemo.unity
     guid: d53544b2ed1264245af18cf0fc2da0a2
+  - enabled: 1
+    path: Assets/MultiplayerClass/LobbyDemo.unity
+    guid: 94f52d9368da49a47b5683ba5d85cad2
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
