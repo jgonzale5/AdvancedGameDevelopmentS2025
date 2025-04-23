@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 //
 using UnityEngine.UI;
+//
+using Unity.Netcode.Transports.UTP;
 
 public class HelloWorldManager : MonoBehaviour
 {
@@ -29,6 +31,26 @@ public class HelloWorldManager : MonoBehaviour
     /// This will tell the script the name of the scene we're trying to load
     /// </summary>
     public string arenaSceneName;
+
+
+    [Header("IP Port Settings")]
+    ///The field where the user enters the IP they want to connect to
+    public TMP_InputField IPField;
+    ///The field where the user enters the port they want to connect through
+    public TMP_InputField PortField;
+    //
+    private UnityTransport uTransport;
+
+    //
+    private void Start()
+    {
+        //Get get the transport from the same object as the network manager
+        uTransport = networkManager.gameObject.GetComponent<UnityTransport>();
+        //We set the input field of the IP to hold the IP specified by the transport
+        IPField.text = uTransport.ConnectionData.Address.ToString();
+        //We set the input field of the port to hold the port specified by the transport
+        PortField.text = uTransport.ConnectionData.Port.ToString();
+    }
 
     private void Update()
     {
@@ -108,6 +130,23 @@ public class HelloWorldManager : MonoBehaviour
         {
             //We load the scene specified
             networkManager.SceneManager.LoadScene(arenaSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
+    }
+
+    //Will set hte IP of the Unity transport to match the one given by the caller of this function
+    public void SetIP(string to)
+    {
+        uTransport.ConnectionData.Address = to.Trim();
+    }
+
+    //Will set the port of the Unity transport to match the one given by the caller of this function
+    public void SetPort(string to)
+    {
+        if (ushort.TryParse(to, out ushort port))
+            uTransport.ConnectionData.Port = port;
+        else
+        {
+            Debug.LogError("Wrong port format. Couldn't be parsed.");
         }
     }
 }
