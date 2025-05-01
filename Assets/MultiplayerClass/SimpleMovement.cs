@@ -1,6 +1,7 @@
 using UnityEngine;
 //We add the Netcode library
 using Unity.Netcode;
+using System.Security.Principal;
 
 //You need to change the inherited class since it will inteface with the network scripts
 public class SimpleMovement : NetworkBehaviour
@@ -18,8 +19,9 @@ public class SimpleMovement : NetworkBehaviour
     {
 
         //If this is the local player, we read the player input and update it
-        if (IsLocalPlayer)
+        if (IsOwner)
         {
+            Debug.Log("Local");
             //
             Vector3 movement = new Vector3(
                 Input.GetAxis("Horizontal") * speed,
@@ -45,7 +47,7 @@ public class SimpleMovement : NetworkBehaviour
     //We submit the position request at fixed update so we send less messages. 
     private void FixedUpdate()
     {
-        if (IsLocalPlayer)
+        if (IsOwner)
         {
             //Ask the server to update the player position
             SubmitPositionRequestRpc(transform.position);
@@ -55,6 +57,7 @@ public class SimpleMovement : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void SubmitPositionRequestRpc(Vector3 newPosition, RpcParams rpcParams = default)
     {
+        Debug.Log("Moving " + this.name + " to " + newPosition.ToString());
         //Update the value of the network position to match the new position
         networkPosition.Value = newPosition;
     }
